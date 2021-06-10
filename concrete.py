@@ -113,16 +113,36 @@ def creat_first_table():
             'story':get_all_frames()[3],
             "section":[x[0] for x in get_section_prop()],
             "width":get_section_dim()["widths"],
-            "height":get_section_dim()["heights"]
+            "height":get_section_dim()["heights"],
+            "length":get_lengh(),
 
             }
 
-    df = pd.DataFrame(cars, columns = ['Uniq_name','label',"story",'section','width',"height"])
+    df = pd.DataFrame(cars, columns = ['Uniq_name','label',"story",'section','width',"height","length"])
+    df["Area"]=df['width']*df["height"]
+    df["volume"]=df["Area"]*df["length"]
     return df
+
+def get_poits():
+    frame_uniq_names=get_all_frames()[1]
+    all_points=[]
+    for frame in frame_uniq_names:
+        all_points.append(FrameObj.GetPoints(frame))
+    return all_points
+
+print(get_poits())
+def get_lengh():
+    points=get_poits()
+    re=[]
+    print(PointObj.GetCoordCartesian(points[0][0])[0:3])
+    print(PointObj.GetCoordCartesian(points[0][1])[0:3])
+    for x in points:
+        x1,y1,z1=PointObj.GetCoordCartesian(x[0])[0:3]
+        x2,y2,z2=PointObj.GetCoordCartesian(x[1])[0:3]
+        re.append(((x1-x2)**2+(y1-y2)**2+(z1-z2)**2)**0.5)
+    return re
+
 print(creat_first_table())
-
-
-print(creat_upper_lower())
 
 
 
